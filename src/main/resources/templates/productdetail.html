@@ -41,6 +41,7 @@
         <h5 class="text-center" scope="row" th:text="${product.id}"></h5>
         <h5 class="text-center" scope="row" th:text="${product.quantity}"></h5>
         <div class="d-flex justify-content-between">
+            <a class="btn btn-primary" th:href="@{'/view/products'}">Back</a>
             <a class="btn btn-danger" th:href="@{'/view/products/delete/' + ${product.id}}">Delete</a>
             <a class="btn btn-secondary" th:href="@{'/view/products/edit/' + ${product.id}}">&nbsp;&nbsp;Edit&nbsp;&nbsp;</a>
         </div>
