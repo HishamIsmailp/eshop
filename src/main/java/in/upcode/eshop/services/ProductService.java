@@ -5,6 +5,7 @@ import in.upcode.eshop.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public List<Product> GetAllProducts() {
-      return productRepository.findAll();
+        return productRepository.findAll();
     }
 
     public void PostProduct(Product product) {
@@ -25,20 +26,25 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public void DeleteProduct(Long id) {productRepository.deleteById(id);}
-    public void UpdateProduct(Long id, Product prod) {
-        Optional<Product> product;
-        product = productRepository.findById(id);
-        if(product.isEmpty()){
-            System.out.println("item not found");
+    public void DeleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void UpdateProduct(Long id, String name, String image, int quantity) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
             return;
         }
-        Product existingProduct=product.get();
-        if (prod.getName()!=null){
-            existingProduct.setName(prod.getName());
+        Product existingProduct = product.get();
+        if (name != null) {
+            existingProduct.setName(name);
         }
-        if (prod.getQuantity() !=0){
-            existingProduct.setQuantity(prod.getQuantity());
+        if (quantity != 0) {
+            existingProduct.setQuantity(quantity);
+        }
+        if (image != null) {
+            existingProduct.setImage(image);
         }
         productRepository.save(existingProduct);
     }

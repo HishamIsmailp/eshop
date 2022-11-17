@@ -1,7 +1,6 @@
 package in.upcode.eshop.models;
 
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
@@ -14,10 +13,9 @@ import javax.persistence.*;
 @ToString
 public class Product {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private int quantity;
+    private String image;
 }

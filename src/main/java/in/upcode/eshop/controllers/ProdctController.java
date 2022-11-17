@@ -10,56 +10,60 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-//@RestController
 @Controller
 public class ProdctController {
     @Autowired
     ProductService productService;
 
-//    @GetMapping("products")
-//    public List<Product> GetAllProducts(){
-//       return productService.GetAllProducts();
-//    }
     @RequestMapping("products")
     @ResponseBody
-    public List<Product> GetAllProducts(){
-    return productService.GetAllProducts();
-}
+    public List<Product> GetAllProducts() {
+        return productService.GetAllProducts();
+    }
 
     @RequestMapping("view/products")
-    public String displayProducts(Model model){
-        List<Product> products=productService.GetAllProducts();
-        model.addAttribute("products",products);
+    public String displayProducts(Model model) {
+        List<Product> products = productService.GetAllProducts();
+        model.addAttribute("products", products);
         return "products";
     }
 
-
-    @PostMapping("products")
-    public void PostProduct(@RequestBody Product product){
-        productService.PostProduct(product);
-    }
-
-
-    @PutMapping("products/{id}")
-    public void UpdateProduct(@PathVariable Long id,@RequestBody Product product){
-        productService.UpdateProduct(id,product);
-    }
-
-    @GetMapping("products/{id}")
-    public Optional<Product> GetAllProducts(@PathVariable Long id){
-        return productService.GetProduct(id);
-    }
-
     @RequestMapping("view/products/{id}")
-    public String displayProductDetail(@PathVariable Long id,Model model){
-        Optional<Product> product=productService.GetProduct(id);
-        model.addAttribute("product",product.get());
+    public String displayProductDetail(@PathVariable Long id, Model model) {
+        Optional<Product> product = productService.GetProduct(id);
+        model.addAttribute("product", product.get());
         return "productdetail";
     }
 
-    @DeleteMapping("products/{id}")
-    public void DeleteProduct(@PathVariable Long id){
-        productService.DeleteProduct(id);
+    @RequestMapping("view/products/new")
+    public String displayCreateForm(Model model) {
+        Product product = new Product();
+        model.addAttribute(product);
+        return "newproduct";
     }
 
+    @RequestMapping(value = "view/products/edit/{id}", method = RequestMethod.GET)
+    public String displayEditForm(@PathVariable Long id, Model model) {
+        Optional<Product> product = productService.GetProduct(id);
+        model.addAttribute(product.get());
+        return "editproduct";
+    }
+
+    @RequestMapping(value = "view/products/create", method = RequestMethod.POST)
+    public String createProduct(@ModelAttribute("product") Product product) {
+        productService.PostProduct(product);
+        return "redirect:/view/products";
+    }
+
+    @RequestMapping("view/products/delete/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        productService.DeleteProduct(id);
+        return "redirect:/view/products";
+    }
+
+    @RequestMapping("view/products/update")
+    public String updateProduct(@RequestParam(required = false) Long id, @RequestParam(required = false) String name, @RequestParam(required = false) String image, @RequestParam(required = false) int quantity) {
+        productService.UpdateProduct(id, name, image, quantity);
+        return "redirect:/view/products";
+    }
 }
